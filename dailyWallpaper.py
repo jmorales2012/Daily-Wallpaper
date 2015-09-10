@@ -35,8 +35,8 @@ def get_picture(redditURL):
     """
 
     # Create unique user-agent for header to get into Reddit, download page
-    headers = {'user-agent': 'Mac OSX:https://github.com/jmorales2012/AwwPaper\
-    :v1 (by /u/IAmAmbitious)'}
+    headers = {'user-agent': 'Mac OSX:https://github.com/jmorales2012/\
+                Daily-Wallpaper:v1 (by /u/IAmAmbitious)'}
     redditPage = requests.get(redditURL, headers=headers)
     redditPage.raise_for_status()
 
