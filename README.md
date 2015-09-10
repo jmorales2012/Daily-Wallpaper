@@ -13,8 +13,7 @@ chmod +x dailyWallpaper.py
 2. Make the program run in the background even when terminal is closed. Type:
 nohup /path/to/dailyWallpaper.py &
 
-3. Uncomment line # 130
-
+3. Run script from terminal and enter 'y' to run continuously
 
 **To kill the program:
 
