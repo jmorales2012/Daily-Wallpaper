@@ -117,7 +117,6 @@ def set_background(filename):
 
 
 if __name__ == '__main__':
-    while True:
         print('Downloading...')
 
         redditURL = 'https://www.reddit.com/r/aww/top/'
@@ -126,5 +125,6 @@ if __name__ == '__main__':
         set_background(filename)
 
         # Read instructions at top to have file run as background process
-        # Uncomment to have code run every 24 hours
+        # Uncomment to have code run every 24 hours, and add 'while true' just
+        # before line # 120
         # time.sleep(86400)
