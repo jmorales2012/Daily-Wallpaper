@@ -1,29 +1,7 @@
 """AwwPaper: Pull the daily top post from reddit.com/r/aww and set as wallpaper
 
-Program will:
--Access reddit.com/r/aww/top
--Access link for top post
--Get image from imgur
--Set image as background wallpaper
-
-Steps:
-1. Download page for reddit.com/r/aww/top (requests)
-2. Find element that holds link for top post (bs4)
-3. Download that link (requests)
-4. Find element with image URL (bs4)
-5. Download image, write to file (iter_content)
-6. Set as wallpaper background
-7. Check every 24 hours for new update
-8. Repeat steps
-
-To run in the background:
-In the terminal enter:
-chmod +x dailyWallpaper.py
-nohup /path/to/file.py &
-
-To get PID for script:
-In the terminal enter:
-ps -A | grep -m1 dailyWallpaper.py | awk '{print $1}'
+Read README for instructions on how to run program continuously in the
+background even when you close terminal.
 """
 
 
