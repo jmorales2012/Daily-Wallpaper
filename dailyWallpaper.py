@@ -117,14 +117,24 @@ def set_background(filename):
 
 
 if __name__ == '__main__':
+
+    selection = input('Want to run this continuously? Enter y/n: ').lower()
+
+    while selection == 'y':
+        # Run continuously
+        print('Read the README to run the program in the background!\n')
         print('Downloading...')
 
         redditURL = 'https://www.reddit.com/r/aww/top/'
 
         filename = get_picture(redditURL)
         set_background(filename)
+        # Runs the loop every 24 hours
+        time.sleep(86400)
 
-        # Read instructions at top to have file run as background process
-        # Uncomment to have code run every 24 hours, and add 'while true' just
-        # before line # 120
-        # time.sleep(86400)
+    # Run the program only one time
+    print('Downloading...')
+    redditURL = 'https://www.reddit.com/r/aww/top/'
+
+    filename = get_picture(redditURL)
+    set_background(filename)
