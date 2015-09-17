@@ -15,23 +15,14 @@ import datetime
 import subprocess
 
 
-def create_dir(directory):
-    """Check to see if a directory exists. If not, create it.
-
-    Args:
-        directory: Name of the directory we want to check/create
-    """
-
-    dPath = os.getcwd() + '/' + directory + '/'
-    os.makedirs(dPath, exist_ok=True)
-    return dPath
-
-
-def get_picture(redditURL):
+def get_post(redditURL):
     """Uses redditURL to find top post and download image from imgur
 
     Args:
-        redditURL: link to reddit/r/aww/top
+        redditURL: Link to reddit/r/aww/top
+
+    Returns:
+        filename: Name of newly created file
     """
 
     # Create unique user-agent for header to get into Reddit, download page
@@ -45,18 +36,52 @@ def get_picture(redditURL):
     topPosts = redditParsed.select('a.title.may-blank')
 
     # Get the imgur URL inside top reddit post
-    imgurURL = topPosts[0].get('href')
+    x = 0
+    imgurURL = topPosts[x].get('href')
 
-    # Download the imgur page from the URL above
+    # Run get_pic_link to get pic, filter out gifs
+    picURL = get_pic_link(imgurURL, headers)
+
+    while not picURL:
+        x += 1
+        imgurURL = topPosts[x].get('href')
+        picURL = get_pic_link(imgurURL, headers)
+
+    filename = download_pic(picURL)
+
+    return filename
+
+
+def get_pic_link(imgurURL, headers):
+    """Takes the imgur URL returns link if it is a picture, not gif/vid
+
+    Args:
+        imgurURL: Link to top post (should be imgur page)
+
+    Returns:
+        picURL: Link to picture, not gif
+    """
+
+    # Download the imgur page from imgurURL
     imgurPage = requests.get(imgurURL, headers=headers)
     imgurPage.raise_for_status()
 
     # Parse imgur page, find the image selector, and get the URL
     imgurParsed = bs4.BeautifulSoup(imgurPage.text, "html.parser")
-    picElem = imgurParsed.select('a.zoom')
-    picURL = 'http:' + picElem[0].get('href')
+    picElem = imgurParsed.select('img')
 
-    # Download image from imgur
+    # If favicon.ico is the first <img> on the page, page is of a gif
+    # Will return 0 in order to rerun with next topPost
+    if 'favicon.ico' in str(picElem) or len(picElem) == 0:
+        return False
+
+    picURL = 'http:' + picElem[0].get('src')
+    return picURL
+
+
+def download_pic(picURL):
+    """Download image from imgur
+    """
     print('Downloading pic from ' + picURL)
     topPic = requests.get(picURL)
     topPic.raise_for_status
@@ -68,6 +93,18 @@ def get_picture(redditURL):
             imageFile.write(chunk)
 
     return filename
+
+
+def create_dir(directory):
+    """Check to see if a directory exists. If not, create it.
+
+    Args:
+        directory: Name of the directory we want to check/create
+    """
+
+    dPath = os.getcwd() + '/' + directory + '/'
+    os.makedirs(dPath, exist_ok=True)
+    return dPath
 
 
 def set_background(filename):
@@ -105,7 +142,7 @@ if __name__ == '__main__':
 
         redditURL = 'https://www.reddit.com/r/aww/top/'
 
-        filename = get_picture(redditURL)
+        filename = get_post(redditURL)
         set_background(filename)
         # Runs the loop every 24 hours
         time.sleep(86400)
@@ -114,5 +151,5 @@ if __name__ == '__main__':
     print('Downloading...')
     redditURL = 'https://www.reddit.com/r/aww/top/'
 
-    filename = get_picture(redditURL)
+    filename = get_post(redditURL)
     set_background(filename)
